@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: codeguardian
+  labels:
+    app.kubernetes.io/name: codeguardian
+    app.kubernetes.io/part-of: codeguardian

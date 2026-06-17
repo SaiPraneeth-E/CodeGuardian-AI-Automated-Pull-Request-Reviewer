@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: codeguardian-config
+  namespace: codeguardian
+  labels:
+    app.kubernetes.io/name: codeguardian
+data:
+  SPRING_PROFILES_ACTIVE: "docker"
+  DATABASE_URL: "jdbc:postgresql://postgres:5432/codeguardian"
+  KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
+  QDRANT_HOST: "qdrant"
+  QDRANT_PORT: "6334"
+  QDRANT_COLLECTION_NAME: "codeguardian-codebase"
+  GITHUB_API_URL: "https://api.github.com"
+  GEMINI_MODEL: "gemini-1.5-flash"
+  GEMINI_TIMEOUT_MS: "30000"
+  GEMINI_MAX_RETRIES: "3"
+  GEMINI_BACKOFF_MS: "1000"

@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: codeguardian-ingress
+  namespace: codeguardian
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  rules:
+    # Omit or replace the host field with your real domain (e.g. codeguardian.example.com)
+    - host: codeguardian.local
+      http:
+        paths:
+          # Routes all traffic to the dashboard frontend, which proxies `/api/*` to the backend
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: dashboard
+                port:
+                  number: 80

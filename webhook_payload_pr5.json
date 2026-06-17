@@ -1,0 +1,25 @@
+{
+  "action": "opened",
+  "number": 5,
+  "pull_request": {
+    "id": 2238472837,
+    "number": 5,
+    "title": "Fix linkedin link and remove email",
+    "state": "open",
+    "head": {
+      "sha": "7b5901f1a90f7b3128953edc9869e1845958c842"
+    },
+    "base": {
+      "sha": "88840cd681939b04f236f1d5144fcc524e47e1f0"
+    },
+    "user": {
+      "login": "SaiPraneeth-E"
+    }
+  },
+  "repository": {
+    "name": "PraneethPortfolio",
+    "owner": {
+      "login": "SaiPraneeth-E"
+    }
+  }
+}

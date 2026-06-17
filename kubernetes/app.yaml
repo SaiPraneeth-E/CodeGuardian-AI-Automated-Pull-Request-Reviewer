@@ -1,0 +1,113 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: app
+  namespace: codeguardian
+  labels:
+    app: app
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: app
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  namespace: codeguardian
+  labels:
+    app: app
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      containers:
+        - name: app
+          # Note: Replace with your actual docker registry image tag, e.g. registry.hub.docker.com/your-org/codeguardian-app:latest
+          image: codeguardian-app:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+          envFrom:
+            - configMapRef:
+                name: codeguardian-config
+          env:
+            - name: DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: codeguardian-secrets
+                  key: postgres-user
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: codeguardian-secrets
+                  key: postgres-password
+            - name: GITHUB_WEBHOOK_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: codeguardian-secrets
+                  key: github-webhook-secret
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: codeguardian-secrets
+                  key: github-token
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: codeguardian-secrets
+                  key: gemini-api-key
+            - name: GITHUB_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: codeguardian-secrets
+                  key: github-client-id
+            - name: GITHUB_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: codeguardian-secrets
+                  key: github-client-secret
+            - name: ENCRYPTION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: codeguardian-secrets
+                  key: encryption-secret
+            # JVM Memory Options for container awareness
+            - name: JAVA_OPTS
+              value: "-XX:MaxRAMPercentage=75.0 -XX:InitialRAMPercentage=50.0"
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 45
+            periodSeconds: 15
+            timeoutSeconds: 5

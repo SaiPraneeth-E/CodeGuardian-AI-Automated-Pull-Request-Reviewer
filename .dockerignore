@@ -1,0 +1,22 @@
+# target/
+node_modules/
+.git/
+.gitignore
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+.settings/
+.classpath
+.project
+maven-dist/
+dashboard/node_modules/
+dashboard/dist/
+*.log
+# *.jar
+*.war
+*.class
+.env.local
+.DS_Store
+Thumbs.db

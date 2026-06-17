@@ -1,0 +1,73 @@
+spring:
+  application:
+    name: codeguardian-ai
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: ${GITHUB_CLIENT_ID:mock-client-id}
+            client-secret: ${GITHUB_CLIENT_SECRET:mock-client-secret}
+            scope:
+              - read:user
+              - user:email
+              - repo
+              - write:repo_hook
+  profiles:
+    active: local
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/codeguardian}
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: codeguardian-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.codeguardian.domain.model"
+
+server:
+  port: 8080
+
+codeguardian:
+  dashboard-url: ${DASHBOARD_URL:http://localhost:3000}
+  security:
+    encryption-secret: ${ENCRYPTION_SECRET:default-secret-key-32-chars-length!!}
+  github:
+    webhook-secret: ${GITHUB_WEBHOOK_SECRET}
+    token: ${GITHUB_TOKEN:}
+    api-url: ${GITHUB_API_URL:https://api.github.com}
+    approval-threshold: ${GITHUB_APPROVAL_THRESHOLD:80}
+  gemini:
+    api-key: ${GEMINI_API_KEY:}
+    model: ${GEMINI_MODEL:gemini-1.5-flash}
+    timeout-ms: ${GEMINI_TIMEOUT_MS:30000}
+    max-retries: ${GEMINI_MAX_RETRIES:5}
+    backoff-ms: ${GEMINI_BACKOFF_MS:5000}
+  groq:
+    api-key: ${GROQ_API_KEY:}
+    model: ${GROQ_MODEL:llama-3.1-8b-instant}
+  qdrant:
+    host: ${QDRANT_HOST:localhost}
+    port: ${QDRANT_PORT:6334}
+    collection-name: ${QDRANT_COLLECTION_NAME:codeguardian-codebase}
+    vector-size: 768

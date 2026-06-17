@@ -1,0 +1,22 @@
+{
+  "action": "opened",
+  "number": 42,
+  "pull_request": {
+    "id": 123456789,
+    "number": 42,
+    "title": "feat: add user authentication",
+    "state": "open",
+    "head": {
+      "sha": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2"
+    },
+    "base": {
+      "sha": "f6e5d4c3b2a1f6e5d4c3b2a1f6e5d4c3b2a1f6e5"
+    }
+  },
+  "repository": {
+    "name": "ai-pr-review",
+    "owner": {
+      "login": "codeguardian-org"
+    }
+  }
+}

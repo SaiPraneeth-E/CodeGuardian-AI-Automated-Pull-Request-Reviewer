@@ -167,3 +167,18 @@ powershell -ExecutionPolicy Bypass -File ./trigger_review.ps1 -PrUrl "https://gi
 | **Check Container Status** | `docker compose ps` |
 | **Expose Tunnel** | `lt --port 8080 --subdomain ai-pr-reviewer --local-host 127.0.0.1` |
 | **Ad-Hoc Test Script** | `powershell -ExecutionPolicy Bypass -File ./trigger_review.ps1 -PrUrl "<PR_URL>"` |
+
+---
+
+## 📊 Review Results in Action
+
+Here is how the automated code reviews look directly on a GitHub pull request:
+
+### 1. CodeGuardian Pull Request Review Summary
+![CodeGuardian Pull Request Review Summary](./images/media__1781803426433.png)
+
+### 2. Multi-Agent Analysis (Security / Performance Suggestions)
+![Multi-Agent Analysis](./images/media__1781803431157.png)
+
+### 3. Real-Time Feedback Diffs
+![Real-Time Feedback Diffs](./images/media__1781803434081.png)

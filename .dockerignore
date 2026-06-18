@@ -10,7 +10,6 @@ node_modules/
 .settings/
 .classpath
 .project
-maven-dist/
 dashboard/node_modules/
 dashboard/dist/
 *.log

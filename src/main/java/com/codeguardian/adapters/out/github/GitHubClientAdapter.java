@@ -185,6 +185,35 @@ public class GitHubClientAdapter implements GitHubClientPort {
                             .retrieve()
                             .toBodilessEntity();
                     log.info("Successfully submitted fallback code review for PR #{} with comments in summary body.", prNumber);
+                } catch (HttpClientErrorException fallbackEx) {
+                    if (fallbackEx.getStatusCode().value() == 422 && 
+                        (fallbackEx.getResponseBodyAsString().contains("own pull request") || 
+                         fallbackEx.getResponseBodyAsString().contains("own Pull Request"))) {
+                        log.warn("Fallback post also failed due to self-review constraint. Retrying fallback with event type COMMENT.");
+                        GitHubReviewRequest commentOnlyPayload = new GitHubReviewRequest(
+                                fallbackSummary.toString(),
+                                "COMMENT",
+                                List.of()
+                        );
+                        try {
+                            restClient.post()
+                                    .uri(apiUrl + "/repos/" + owner + "/" + repositoryName + "/pulls/" + prNumber + "/reviews")
+                                    .header("Authorization", "Bearer " + token)
+                                    .header("Accept", "application/vnd.github+json")
+                                    .header("X-GitHub-Api-Version", "2022-11-28")
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .body(commentOnlyPayload)
+                                    .retrieve()
+                                    .toBodilessEntity();
+                            log.info("Successfully submitted final comment-only fallback code review for PR #{}.", prNumber);
+                        } catch (Exception commentEx) {
+                            log.error("Failed executing comment-only fallback review submission for PR #{}: {}", prNumber, commentEx.getMessage());
+                            throw new GitHubApiException("GitHub comment fallback review post error: " + commentEx.getMessage(), fallbackEx.getStatusCode().value(), commentEx);
+                        }
+                    } else {
+                        log.error("Failed executing fallback review submission for PR #{}: {}", prNumber, fallbackEx.getMessage());
+                        throw new GitHubApiException("GitHub fallback review post error: " + fallbackEx.getMessage(), e.getStatusCode().value(), fallbackEx);
+                    }
                 } catch (Exception ex) {
                     log.error("Failed executing fallback review submission for PR #{}: {}", prNumber, ex.getMessage());
                     throw new GitHubApiException("GitHub fallback review post error: " + ex.getMessage(), e.getStatusCode().value(), ex);

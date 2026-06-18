@@ -53,8 +53,8 @@ public class PullRequestPersistenceAdapter implements PullRequestRepositoryPort 
                 .state(domain.getState())
                 .headSha(domain.getHeadSha())
                 .baseSha(domain.getBaseSha())
-                .createdAt(domain.getCreatedAt())
-                .updatedAt(domain.getUpdatedAt())
+                .createdAt(domain.getCreatedAt() != null ? domain.getCreatedAt() : java.time.Instant.now())
+                .updatedAt(domain.getUpdatedAt() != null ? domain.getUpdatedAt() : java.time.Instant.now())
                 .build();
     }
 

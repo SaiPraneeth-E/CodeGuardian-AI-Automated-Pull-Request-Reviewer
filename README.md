@@ -6,6 +6,10 @@ CodeGuardian AI is an intelligent, multi-agent automated code review system. It 
 
 ## 🏗️ Project Architecture & Stack
 
+Below is the high-level system architecture and workflow diagram of the CodeGuardian AI service:
+
+![CodeGuardian AI System Architecture & High Level Workflow](./images/media__1781806976500.png)
+
 The system follows a clean, Hexagonal (Ports & Adapters) architectural pattern to isolate business logic from databases and external APIs:
 
 ```
